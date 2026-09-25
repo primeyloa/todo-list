@@ -1,9 +1,9 @@
 const todoList = document.getElementById("todo-container");
-// const addTodoForm = document.getElementById("add-todo-form");
-const body = document.getElementsByTagName('body');
-
-const addTodoModal = document.getElementById("add-todo");
-
+const addTodoBtn = document.getElementById("add-todo");
+const modal = document.querySelector(".modal");
+const closeModalBtn = document.querySelector(".close");
+closeModalBtn.addEventListener("click", hideModal);
+addTodoBtn.addEventListener("click", showModal);
 
 const todos = [
   {
@@ -59,5 +59,9 @@ function renderTodos() {
 renderTodos();
 
 function showModal(){
-  addTodoModal.style.display = "block";
+  modal.style.display = "grid";
+}
+
+function hideModal(){
+  modal.style.display = "none";
 }
