@@ -5,58 +5,51 @@ const closeModalBtn = document.querySelector(".close");
 closeModalBtn.addEventListener("click", hideModal);
 addTodoBtn.addEventListener("click", showModal);
 
-const todos = [
-  {
-    title: "Racing",
-    description: "Join a Go-Kart racing tourney",
-    _status: "Incomplete",
-  },
-  {
-    title: "Study",
-    description: "Study for the upcoming tests",
-    _status: "Complete",
-  },
-  {
-    title: "Record song sample",
-    description: "Go to recording studio to get your verse recorded",
-    _status: "Incomplete",
-  },
-  {
-    title: "Charge my phone",
-    description: "Place your phone on charge",
-    _status: "Incomplete",
-  },
-  {
-    title: "Lunch",
-    description: "Have lunch with your family",
-    _status: "Complete",
-  },
-  {
-    title: "Reading",
-    description: "Read the Great Gatsby",
-    _status: "Incomplete",
-  },
-];
-
-function renderTodos() {
+function renderTodos(todos) {
   todoList.innerHTML = "";
 
   todos.forEach((todo) => {
     const todoItem = document.createElement("div");
-    todoItem.classList.add("todo-item");
-    todoItem.innerHTML = `
-      <div class="details">
-        <h3 class="title">${todo.title}</h3>
-        <div class="description">${todo.description}</div>
-        <div class="status">${todo._status}</div>
-      </div>
-      <input type="checkbox" ${todo._status === "Complete" ? "checked" : ""}>
-    `;
+    todoItem.classList.add("todo-item", todo.completed ? "completed" : "incomplete");
+
+    const details = document.createElement("div");
+    details.classList.add("details");
+    const title = document.createElement("h3");
+    title.classList.add("title");
+    title.textContent = todo.title;
+    const description = document.createElement("div");
+    description.classList.add("description");
+    description.textContent = todo.description;
+    const status = document.createElement("div");
+    status.classList.add("status");
+    status.textContent = todo.completed ? "Complete" : "Incomplete";
+    details.append(title, description, status);
+
+    const checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+    checkbox.checked = todo.completed;
+    checkbox.disabled = true;
+    checkbox.setAttribute("aria-label", `Mark ${todo.title} complete`);
+
+    todoItem.append(details, checkbox);
     todoList.appendChild(todoItem);
   });
 }
 
-renderTodos();
+async function loadTodos() {
+  try {
+    const response = await fetch("http://127.0.0.1:8000/todos");
+    if (!response.ok) {
+      throw new Error(`Request failed with status ${response.status}`);
+    }
+    renderTodos(await response.json());
+  } catch (error) {
+    todoList.textContent = "Unable to load todos. Start the FastAPI server and refresh.";
+    console.error(error);
+  }
+}
+
+loadTodos();
 
 function showModal(){
   modal.style.display = "grid";

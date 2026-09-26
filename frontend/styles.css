@@ -67,6 +67,22 @@
   margin-left: auto;
   margin-right: auto;
   border: 1px solid black;
+  border-radius: 8px;
+  background: white;
+}
+
+.todo-item.completed {
+  background: #eef8ee;
+  border-color: #5f9f67;
+}
+
+.todo-item.incomplete {
+  background: #fff8e8;
+  border-color: #d49c32;
+}
+
+.status {
+  font-weight: 600;
 }
 
 .todo-item:hover {
